@@ -651,7 +651,7 @@ definitions:
         example: 25043
       minAmount:
         type: integer
-        description: Minimum allowed amount to pay by lowest subdivision (øre). If this is set, it indicates that this invoice can be paid with any amount between and including `minAmount` and `amount`.
+        description: Minimum allowed amount to pay by lowest subdivision (øre). If this is set, it indicates that this invoice can be paid with any amount between and including `minAmount` and `amount`. Note that the user can override this.
         example: 25043
       subject:
         type: string
