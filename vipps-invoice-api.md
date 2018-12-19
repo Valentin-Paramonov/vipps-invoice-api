@@ -12,7 +12,7 @@ Please use GitHub's built-in functionality for
 [pull requests](https://github.com/vippsas/vipps-invoice-api/pulls),
 or contact us at integration@vipps.no.
 
-Document version: 0.3.4.
+Document version: 0.4.0.
 
 # Overview
 
@@ -34,6 +34,7 @@ Document version: 0.3.4.
   - [Debt collection](#debt-collection)
 - [Invoice states](#invoice-states)
 - [HTTP responses](#http-responses)
+- [Base URL](#base-url)
 - [Postman](#postman)
   - [Setup](#setup)
     - [Step 1: Import the Postman Collection](#step-1-import-the-postman-collection)
@@ -76,7 +77,8 @@ Document version: 0.3.4.
   - [State 6: Deleted](#state-6-deleted)
   - [State 7: Revoked](#state-7-revoked)
 - [Screenshots](#screenshots)
-  - [Mapping from API to Vipps app](#screenshots-mapping-from-api-to-vipps-app)
+  - [Mapping from API to Vipps app](#mapping-from-api-to-vipps-app)
+    - [Example JSON payload](#example-json-payload)
 - [Questions or comments?](#questions-or-comments)
 
 ## External documentation
@@ -738,22 +740,23 @@ For details on JWT, see the [RFC 7519](https://tools.ietf.org/html/rfc7519) or
 
 ## State transitions
 
-| #   | From       | To         | Description                                             |
-| --- | ---------- | ---------- | ------------------------------------------------------- |
-| 1   | `created`  | `pending`  | Successfully validated                                  |
-| 2   |            | `rejected` | Validation **failed**                                   |
-| 3   |            | `revoked`  | The invoice has been deleted by the ISP                 |
-| -   | `rejected` | --         | Final state                                             |
-| 4   | `pending`  | `expired`  | After grace period, the invoice cannot be modified      |
-| 5   |            | `deleted`  | The recipient deleted the invoice                       |
-| 6   |            | `approved` | The recipient approved invoice and payment is scheduled |
-| 7   |            | `revoked`  | The invoice has been deleted by the ISP                 |
-| -   | `expired`  | --         | Final state                                             |
-| 8   | `approved` | `approved` | The recipient has updated the payment details           |
-| 9   |            | `pending`  | The recipient has stopped the payment                   |
-| 10  |            | `deleted`  | Virtual transition composed of 9 + 5                    |
-| -   | `deleted`  | --         | Final state                                             |
-| -   | `revoked`  | --         | Final state                                             |
+| #   | From                  | To                   | Description                                             |
+| --- | --------------------- | -------------------- | ------------------------------------------------------- |
+| 1   | `created`             | `externalProcessing` | Successfully validated and sent for external processing |
+| 2   |                       | `rejected`           | Validation **failed**                                   |
+| 3   |                       | `revoked`            | The invoice has been deleted by the ISP                 |
+| 4   | `externalProcessing`  | `pending`            | Validated externally and ready for recipient            |
+| -   | `rejected`            | --                   | Final state                                             |
+| 5   | `pending`             | `expired`            | After grace period, the invoice cannot be modified      |
+| 6   |                       | `deleted`            | The recipient deleted the invoice                       |
+| 7   |                       | `approved`           | The recipient approved invoice and payment is scheduled |
+| 8   |                       | `revoked`            | The invoice has been deleted by the ISP                 |
+| -   | `expired`             | --                   | Final state                                             |
+| 9   | `approved`            | `approved`           | The recipient has updated the payment details           |
+| 10  |                       | `pending`            | The recipient has stopped the payment                   |
+| 11  |                       | `deleted`            | Virtual transition composed of 9 + 5                    |
+| -   | `deleted`             | --                   | Final state                                             |
+| -   | `revoked`             | --                   | Final state                                             |
 
 ## Detailed state descriptions
 

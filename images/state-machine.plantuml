@@ -4,21 +4,25 @@ skinparam monochrome true
 Title State machine for an invoice
 
 [*] --> Created
-Created --> Pending : T1
+Created --> ExternalProcessing : T1
 Created --> Rejected : T2
 Created --> Revoked : T3
-Pending --> Expired : T4
-Pending --> Deleted : T5
-Pending --> Approved : T6
-Pending --> Revoked : T7
-Approved --> Approved : T8
-Approved --> Pending : T9
-Approved --> Deleted : T10
+
+ExternalProcessing --> Pending : T4
+
+Pending --> Expired : T5
+Pending --> Deleted : T6
+Pending --> Approved : T7
+Pending --> Revoked : T8
+Approved --> Approved : T9
+Approved --> Pending : T10
+Approved --> Deleted : T11
 Expired --> [*]
 Revoked --> [*]
 Deleted --> [*]
 Rejected --> [*]
 
+Pending : - ExternalID
 Approved : - Amount\n- Due
 Rejected : - Problems
 
